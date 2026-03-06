@@ -1,0 +1,54 @@
+---
+title: "Post a Bounty"
+description: "How to create and fund a bounty"
+---
+
+## Before You Start
+
+- Connect your wallet via Privy (email, Google, or existing wallet)
+- Have enough ETH or USDC on Base Sepolia for the prizes + gas
+
+## Step 1: Create the Bounty
+
+Navigate to **Bounties** and click **Create Bounty**. Fill in:
+
+| Field | Description |
+|-------|-------------|
+| Title | Short description of the task |
+| Description | Full requirements and deliverables |
+| Prize tiers | Amount for each rank (1st, 2nd, 3rd, etc.) |
+| Open deadline | When submissions close |
+| Judging deadline | When you must select winners by |
+| Slash percentage | Penalty if you miss the judging deadline (25-50%) |
+| Token | ETH or USDC |
+
+## Step 2: Fund the Escrow
+
+When you confirm the transaction, the total prize amount is transferred to the smart contract. For ERC-20 tokens (USDC), you'll need to approve the token transfer first.
+
+The funds are locked until you select winners or the slash mechanism triggers.
+
+## Step 3: Wait for Submissions
+
+Submitters pay a 1% deposit when they submit work. Deposits are refunded to all submitters (winners and non-winners) when the bounty resolves.
+
+## Step 4: Select Winners
+
+After the open deadline passes, review submissions and select winners:
+
+1. Go to your bounty page
+2. Review each submission's IPFS proof
+3. Rank the winners (first place gets `prizes[0]`, second gets `prizes[1]`, etc.)
+4. Confirm the transaction
+
+All payouts are credited to each winner's pull balance. They can withdraw whenever they want.
+
+## Tips
+
+- **Set realistic deadlines.** Give submitters enough time to do quality work, and give yourself enough time to judge.
+- **Slash percentage matters.** A higher slash percentage (40-50%) incentivizes you to judge on time and gives submitters more confidence.
+- **Fewer winners than slots is fine.** If you set 3 prize tiers but only 2 submissions are good, you can select 2 winners. The unused prize is refunded.
+
+## What Happens If You Don't Judge?
+
+If you miss the judging deadline, anyone can call `triggerSlash()`. The slash percentage of your escrowed funds is split equally among submitters, and the rest is returned to you.

@@ -1,0 +1,56 @@
+---
+title: "Overview"
+description: "Smart contract system overview"
+---
+
+Quinty's on-chain logic is split across four contracts deployed on Base Sepolia.
+
+## Contracts
+
+| Contract | Purpose |
+|----------|---------|
+| **Quinty.sol** | Multi-winner bounty system with escrow, deposits, and slash mechanics |
+| **Quest.sol** | Fixed-reward quest system with delegated verifiers |
+| **QuintyReputation.sol** | Soulbound ERC-721 that tracks stats and mints achievement badges |
+| **QuintyNFT.sol** | Simpler soulbound badge NFTs (Creator, Solver, Team types) |
+
+## How They Interact
+
+Quinty.sol and Quest.sol automatically report user activity to QuintyReputation when:
+- A user submits work (`recordSubmission`)
+- A user wins a bounty (`recordWin`)
+- A user creates a bounty or quest (`recordBountyCreation`)
+
+QuintyReputation checks milestone thresholds and mints soulbound badges when users reach 1, 10, 25, 50, or 100 actions in each category.
+
+## Security Features
+
+All contracts share these security patterns:
+
+| Feature | Implementation |
+|---------|---------------|
+| **Pausable** | Owner can pause/unpause. Withdrawals and cancellations are never paused. |
+| **ReentrancyGuard** | Applied to all state-changing functions |
+| **Pull withdrawals** | No push payments. Users call `withdrawETH()` or `withdrawToken()` to claim funds. |
+| **SafeERC20** | All ERC-20 transfers use OpenZeppelin's SafeERC20 |
+| **Token whitelist** | Only owner-approved ERC-20 tokens (currently USDC) can be used |
+| **Soulbound** | Reputation and badge NFTs cannot be transferred |
+
+## Token Support
+
+Contracts accept both ETH and whitelisted ERC-20 tokens:
+
+- **ETH** -- Pass `address(0)` as the token parameter and send value with the transaction
+- **ERC-20** -- Pass the token address (must be whitelisted). User must `approve()` the contract first.
+- **USDC on Base Sepolia** -- `0x036CbD53842c5426634e7929541eC2318f3dCF7e` (6 decimals)
+
+## Deploy Order
+
+```
+1. QuintyReputation
+2. Quinty (set reputation address)
+3. Quest (set reputation address)
+4. QuintyNFT (authorize Quinty as minter)
+5. Authorize Quinty and Quest as callers on Reputation
+6. Whitelist USDC on both Quinty and Quest
+```

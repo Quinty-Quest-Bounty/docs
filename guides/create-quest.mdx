@@ -1,0 +1,60 @@
+---
+title: "Create a Quest"
+description: "How to create a quest with fixed rewards"
+---
+
+## What Is a Quest?
+
+A quest is a task where every approved participant receives the same fixed reward. Unlike bounties (which rank winners), quests reward everyone who qualifies.
+
+Use quests for:
+- Social media tasks (follow, retweet, post)
+- Community participation tasks
+- Simple tasks with many participants
+
+## Step 1: Create the Quest
+
+Navigate to **Quests** and click **Create Quest**. Fill in:
+
+| Field | Description |
+|-------|-------------|
+| Title | Name of the quest |
+| Description | What participants need to do |
+| Requirements | Specific proof needed for verification |
+| Reward per qualifier | Fixed payment for each approved entry |
+| Max qualifiers | Maximum number of approved entries |
+| Deadline | When the quest ends |
+| Token | ETH or USDC |
+
+The total escrow is `reward per qualifier * max qualifiers`.
+
+## Step 2: Fund the Escrow
+
+Confirm the transaction to lock the total reward amount in the contract.
+
+## Step 3: Add Verifiers (Optional)
+
+You can delegate verification to other addresses:
+- Go to your quest page
+- Click **Add Verifier** and enter the wallet address
+- Verifiers can approve or reject entries on your behalf
+- A verifier cannot approve their own entry
+
+## Step 4: Review Entries
+
+As entries come in:
+1. Review each submission's IPFS proof
+2. Approve or reject entries with feedback
+3. Approved entries are immediately paid (credited to solver's pull balance)
+4. Use batch verification to process multiple entries at once (up to 50)
+
+## Step 5: Finalize
+
+The quest finalizes automatically when max qualifiers is reached. Otherwise:
+- You can finalize manually after reviewing all entries
+- Anyone can finalize after the deadline passes
+- Unused escrow (if fewer qualifiers than max) is refunded to you
+
+## Cancellation
+
+You can cancel a quest and get a full refund, but only if no entries have been approved yet. This works even when the contract is paused.

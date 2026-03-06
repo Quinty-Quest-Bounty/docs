@@ -1,0 +1,68 @@
+---
+title: "Reputation & NFTs"
+description: "Soulbound achievement system and badge NFTs"
+---
+
+## QuintyReputation
+
+QuintyReputation is an ERC-721 contract that tracks user statistics and mints non-transferable (soulbound) achievement badges when users hit milestones.
+
+### How It Works
+
+The Quinty and Quest contracts are authorized to call record functions on QuintyReputation. When a user performs an action on-chain, the reputation contract is automatically notified:
+
+| Action | Record Function | Stat Updated |
+|--------|----------------|-------------|
+| Submit to a bounty or quest | `recordSubmission(addr)` | Submission count |
+| Win a bounty | `recordWin(addr)` | Win count |
+| Create a bounty or quest | `recordBountyCreation(addr)` | Bounties created count |
+
+### Achievement Milestones
+
+When a user's stat reaches a milestone threshold, a soulbound NFT is minted automatically:
+
+| Category | Milestones |
+|----------|-----------|
+| **Solver** | 1, 10, 25, 50, 100 submissions |
+| **Winner** | 1, 10, 25, 50, 100 wins |
+| **Creator** | 1, 10, 25, 50, 100 bounties/quests created |
+
+### Monthly Seasons
+
+QuintyReputation tracks monthly seasons (30-day periods). At the end of each season:
+
+- **Monthly Champion** -- Top solver by submission count
+- **Monthly Builder** -- Top creator by bounties/quests created
+
+Season badges are special achievement NFTs that mark leaderboard leaders.
+
+### Soulbound Property
+
+All tokens minted by QuintyReputation are soulbound:
+
+- `transferFrom()` reverts
+- `safeTransferFrom()` reverts
+- Only minting is allowed
+
+This ensures reputation cannot be bought, sold, or transferred.
+
+### On-Chain Metadata
+
+Token metadata is generated fully on-chain as base64-encoded JSON with SVG images. No external server or IPFS dependency for metadata rendering.
+
+## QuintyNFT
+
+QuintyNFT is a simpler badge contract with three badge types:
+
+| Badge Type | Value | Description |
+|-----------|-------|-------------|
+| BountyCreator | 0 | Awarded to bounty creators |
+| BountySolver | 1 | Awarded to bounty solvers |
+| TeamMember | 2 | Awarded to team members |
+
+### Key Features
+
+- **Authorized minters** -- Only addresses approved by the owner can mint
+- **Batch minting** -- Mint to up to 100 recipients in one transaction
+- **Custom metadata** -- Each badge has a `metadataURI` set at mint time
+- **Soulbound** -- `approve()` and `setApprovalForAll()` both revert

@@ -1,0 +1,80 @@
+---
+title: "Architecture"
+description: "System architecture and how components connect"
+---
+
+## System Overview
+
+Quinty consists of 6 repositories that work together:
+
+```mermaid
+graph TD
+    User[User Browser] --> FE[fe-quinty<br/>Next.js 15]
+    FE -->|Privy Auth| BE[be-quinty<br/>NestJS]
+    FE -->|Wagmi/Viem| SC[Smart Contracts<br/>Base Sepolia]
+    BE -->|Profiles| DB[(Supabase<br/>PostgreSQL)]
+    SC --> Q[Quinty.sol]
+    SC --> QU[Quest.sol]
+    SC --> REP[QuintyReputation.sol]
+    SC --> NFT[QuintyNFT.sol]
+    SC -->|Events| IDX[indexer-quinty<br/>Ponder]
+    IDX -->|GraphQL| IDXDB[(PostgreSQL)]
+    Landing[landing-quinty<br/>Vite + React] -->|Links to| FE
+```
+
+## Component Roles
+
+| Component | Purpose | Stack |
+|-----------|---------|-------|
+| **fe-quinty** | Web application for users to interact with bounties, quests, and reputation | Next.js 15, React 19, Wagmi, Privy |
+| **be-quinty** | Authentication API and user profile management | NestJS, Supabase, JWT |
+| **sc-quinty** | Smart contracts that handle all on-chain logic: escrow, judging, reputation | Solidity, Hardhat, OpenZeppelin |
+| **indexer-quinty** | Indexes blockchain events into a queryable database | Ponder, PostgreSQL |
+| **landing-quinty** | Marketing landing page | Vite, React, GSAP |
+| **docs** | This documentation site | Mintlify |
+
+## Contract Interactions
+
+The four contracts interact through authorized caller relationships:
+
+```mermaid
+graph LR
+    Q[Quinty.sol] -->|recordSubmission<br/>recordWin<br/>recordBountyCreation| REP[QuintyReputation.sol]
+    QU[Quest.sol] -->|recordSubmission<br/>recordBountyCreation| REP
+    Q -->|authorizeMinter| NFT[QuintyNFT.sol]
+    REP -->|mint soulbound badges| REP
+```
+
+- **Quinty.sol** and **Quest.sol** are authorized callers on QuintyReputation
+- When users submit, win, or create bounties/quests, the reputation contract is notified automatically
+- QuintyReputation mints soulbound achievement NFTs at milestones (1, 10, 25, 50, 100)
+
+## Authentication Flow
+
+Users authenticate through Privy and the backend issues a JWT for API calls:
+
+```mermaid
+sequenceDiagram
+    User->>Frontend: Login (email/Google/wallet)
+    Frontend->>Privy: Authenticate
+    Privy-->>Frontend: Privy token + user data
+    Frontend->>Backend: POST /auth/sync-profile
+    Backend->>Supabase: Upsert profile
+    Backend-->>Frontend: JWT token (httpOnly cookie)
+    Frontend->>Frontend: Store JWT, load profile
+```
+
+## Data Flow
+
+**Creating a bounty:**
+1. User fills form in frontend
+2. Frontend calls `Quinty.sol.createBounty()` via Wagmi
+3. Transaction confirmed on Base Sepolia
+4. Indexer picks up `BountyCreated` event
+5. Bounty appears in GraphQL queries and frontend lists
+
+**Submitting work:**
+1. User uploads proof to IPFS via Pinata
+2. Frontend calls `Quinty.sol.submitToBounty()` with IPFS CID and deposit
+3. QuintyReputation records the submission
+4. Indexer picks up `SubmissionCreated` event

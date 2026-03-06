@@ -1,0 +1,122 @@
+---
+title: "Local Setup"
+description: "Running the full Quinty stack locally"
+---
+
+## Prerequisites
+
+- Node.js 20+
+- pnpm (for fe-quinty, indexer-quinty, landing-quinty)
+- npm (for sc-quinty, be-quinty)
+- PostgreSQL (for indexer-quinty)
+
+## Start Order
+
+Start the services in this order:
+
+```
+1. Smart contracts (compile + test)
+2. Indexer (needs RPC access to Base Sepolia)
+3. Backend (needs Supabase credentials)
+4. Frontend (needs backend + contracts running)
+```
+
+## 1. Smart Contracts (sc-quinty)
+
+```bash
+cd sc-quinty
+npm install
+npx hardhat compile
+npx hardhat test
+```
+
+Contracts are already deployed on Base Sepolia. You only need to redeploy if you modify the contracts:
+
+```bash
+npx hardhat run scripts/deploy.ts --network baseSepolia
+npx ts-node scripts/export-abis.ts
+```
+
+**Environment variables:**
+
+```env
+PRIVATE_KEY=your_deployer_private_key
+BASE_SEPOLIA_RPC_URL=https://sepolia.base.org
+BASESCAN_API_KEY=your_basescan_key
+```
+
+## 2. Indexer (indexer-quinty)
+
+```bash
+cd indexer-quinty
+pnpm install
+pnpm dev
+```
+
+Runs on `http://localhost:42069` with a GraphQL playground.
+
+**Environment variables:**
+
+```env
+DATABASE_URL=postgresql://user:pass@localhost:5432/indexer
+PONDER_RPC_URL_84532=https://sepolia.base.org
+```
+
+## 3. Backend (be-quinty)
+
+```bash
+cd be-quinty
+npm install
+npm run start:dev
+```
+
+Runs on `http://localhost:3001`. Swagger docs at `/api`.
+
+**Environment variables:**
+
+```env
+SUPABASE_URL=your_supabase_url
+SUPABASE_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+JWT_SECRET=your_jwt_secret
+TWITTER_CLIENT_ID=your_twitter_client_id
+TWITTER_CLIENT_SECRET=your_twitter_client_secret
+```
+
+## 4. Frontend (fe-quinty)
+
+```bash
+cd fe-quinty
+pnpm install
+pnpm dev
+```
+
+Runs on `http://localhost:3000`.
+
+**Environment variables:**
+
+```env
+NEXT_PUBLIC_PRIVY_APP_ID=your_privy_app_id
+NEXT_PUBLIC_API_URL=http://localhost:3001
+NEXT_PUBLIC_TWITTER_CLIENT_ID=your_twitter_client_id
+NEXT_PUBLIC_PINATA_JWT=your_pinata_jwt
+NEXT_PUBLIC_PINATA_GATEWAY=your_pinata_gateway
+```
+
+## 5. Landing Page (optional)
+
+```bash
+cd landing-quinty
+pnpm install
+pnpm dev
+```
+
+Runs on `http://localhost:5173`.
+
+## Testing Contracts
+
+```bash
+cd sc-quinty
+npx hardhat test                           # Run all tests
+npx hardhat test test/Quinty.test.ts       # Run specific test file
+```

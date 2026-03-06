@@ -1,55 +1,34 @@
-# Mintlify Starter Kit
+# Quinty Documentation
 
-Use the starter kit to get your docs deployed and ready to customize.
+Documentation site for the Quinty platform, built with [Mintlify](https://mintlify.com).
 
-Click the green **Use this template** button at the top of this repo to copy the Mintlify starter kit. The starter kit contains examples with
+**Live:** [docs.quinty.io](https://docs.quinty.io)
 
-- Guide pages
-- Navigation
-- Customizations
-- API reference pages
-- Use of popular components
-
-**[Follow the full quickstart guide](https://starter.mintlify.com/quickstart)**
-
-## AI-assisted writing
-
-Set up your AI coding tool to work with Mintlify:
+## Local Development
 
 ```bash
-npx skills add https://mintlify.com/docs
+npx mintlify dev
 ```
 
-This command installs Mintlify's documentation skill for your configured AI tools like Claude Code, Cursor, Windsurf, and others. The skill includes component reference, writing standards, and workflow guidance.
+Opens at `http://localhost:3000`.
 
-See the [AI tools guides](/ai-tools) for tool-specific setup.
-
-## Development
-
-Install the [Mintlify CLI](https://www.npmjs.com/package/mint) to preview your documentation changes locally. To install, use the following command:
+## Structure
 
 ```
-npm i -g mint
+index.mdx                    # Home page
+quickstart.mdx               # Get started in 5 minutes
+essentials/                  # Why Quinty, how it works, architecture
+smart-contracts/             # Contract docs (Quinty, Quest, Reputation, NFT)
+guides/                      # User guides (post bounty, submit work, quests, withdrawals)
+api-reference/               # Backend REST API + Indexer GraphQL
+development/                 # Local setup, repo structure
 ```
 
-Run the following command at the root of your documentation, where your `docs.json` is located:
+## Contributing
 
-```
-mint dev
-```
+1. Create a branch from `main`
+2. Edit or add `.mdx` files
+3. Run `npx mintlify dev` to preview
+4. Submit a PR
 
-View your local preview at `http://localhost:3000`.
-
-## Publishing changes
-
-Install our GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app) to propagate changes from your repo to your deployment. Changes are deployed to production automatically after pushing to the default branch.
-
-## Need help?
-
-### Troubleshooting
-
-- If your dev environment isn't running: Run `mint update` to ensure you have the most recent version of the CLI.
-- If a page loads as a 404: Make sure you are running in a folder with a valid `docs.json`.
-
-### Resources
-- [Mintlify documentation](https://mintlify.com/docs)
+Pages are written in MDX. Navigation is configured in `docs.json`.

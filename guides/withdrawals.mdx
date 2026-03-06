@@ -1,0 +1,60 @@
+---
+title: "Withdrawals"
+description: "How the pull-based withdrawal system works"
+---
+
+## Why Pull-Based?
+
+Quinty uses a **pull-based withdrawal** pattern instead of pushing funds directly to recipients. This is a security best practice that:
+
+- Prevents reentrancy attacks
+- Avoids failed transactions blocking other payments
+- Lets users claim funds at their own pace
+
+## How It Works
+
+When you earn funds (winning a bounty, completing a quest, getting a deposit refund), the amount is **credited to your balance** inside the contract. It is not sent to your wallet automatically.
+
+To receive your funds, you must call the withdraw function.
+
+## Checking Your Balance
+
+You can check your pending balance at any time:
+
+```solidity
+// For ETH
+pendingBalance(address(0), yourAddress)
+
+// For ERC-20 (e.g., USDC)
+pendingBalance(usdcAddress, yourAddress)
+```
+
+In the frontend, your pending balance is shown on your profile page.
+
+## Withdrawing
+
+### ETH
+
+Call `withdrawETH()` on either the Quinty or Quest contract. Your entire pending ETH balance is transferred to your wallet.
+
+### ERC-20 (USDC)
+
+Call `withdrawToken(tokenAddress)` with the token's contract address. Your entire pending balance for that token is transferred.
+
+<Note>
+  Withdrawals are always available, even when the contract is paused. This ensures users can always access their funds.
+</Note>
+
+## When Funds Are Credited
+
+| Event | Who Gets Credited | Amount |
+|-------|------------------|--------|
+| Creator selects winners | Winners | Prize amount + deposit |
+| Creator selects winners | Non-winners | Deposit refund |
+| Creator selects fewer winners than slots | Creator | Unused prize tiers |
+| Slash triggered | All submitters | Slash share + deposit |
+| Slash triggered | Creator | Remaining after slash |
+| Quest entry approved | Solver | Reward per qualifier |
+| Quest finalized | Creator | Unused escrow |
+| Quest cancelled | Creator | Full escrow |
+| No submissions + refund | Creator | Full escrow |
