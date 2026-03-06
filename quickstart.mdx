@@ -1,80 +1,55 @@
 ---
 title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+description: "Get started with Quinty in 5 minutes"
 ---
 
-## Get started in three steps
+## Step 1: Connect Your Wallet
 
-Get your documentation site running locally and make your first customization.
+Go to [app.quinty.io](https://app.quinty.io) and sign in with Privy. You can use:
+- Email
+- Google account
+- An existing wallet (MetaMask, Coinbase Wallet, etc.)
 
-### Step 1: Set up your local environment
+Privy will create an embedded wallet for you if you don't have one.
 
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
+## Step 2: Get Test ETH
 
-### Step 2: Deploy your changes
+You need Base Sepolia test ETH to interact with contracts.
 
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
+1. Go to the [Coinbase Base Faucet](https://www.coinbase.com/faucets/base-ethereum-goerli-faucet)
+2. Enter your wallet address
+3. Receive free test ETH on Base Sepolia
 
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
+<Tip>
+  You can also bridge Sepolia ETH to Base Sepolia using the [Base Bridge](https://bridge.base.org).
+</Tip>
 
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
+## Step 3: Post a Bounty or Quest
 
-### Step 3: Go live
+### Post a Bounty
 
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
+1. Navigate to **Bounties** and click **Create Bounty**
+2. Fill in the title, description, and requirements
+3. Set prize tiers (supports up to 10 winners)
+4. Set open and judging deadlines
+5. Fund the escrow with ETH or USDC
+6. Confirm the transaction
 
-## Next steps
+### Create a Quest
 
-Now that you have your docs running, explore these key features:
+1. Navigate to **Quests** and click **Create Quest**
+2. Define the task requirements
+3. Set the reward per qualifier and max qualifiers
+4. Fund the escrow (reward x max qualifiers)
+5. Confirm the transaction
 
-<CardGroup cols={2}>
+## What's Next?
 
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
-
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
-
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
-</CardGroup>
-
-<Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
-</Note>
+<Columns cols={2}>
+  <Card title="How It Works" icon="gears" href="/essentials/how-it-works">
+    Understand the bounty and quest lifecycle.
+  </Card>
+  <Card title="Withdrawals" icon="wallet" href="/guides/withdrawals">
+    Learn how the pull-based withdrawal system works.
+  </Card>
+</Columns>

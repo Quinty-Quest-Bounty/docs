@@ -1,0 +1,78 @@
+---
+title: "Repository Structure"
+description: "All 6 repositories and how they connect"
+---
+
+## Repositories
+
+| Repo | Stack | Purpose |
+|------|-------|---------|
+| [sc-quinty](https://github.com/Quinty-Quest-Bounty/sc-quinty) | Solidity, Hardhat, OpenZeppelin | Smart contracts, ABIs, deploy scripts |
+| [fe-quinty](https://github.com/Quinty-Quest-Bounty/fe-quinty) | Next.js 15, React 19, Wagmi, Privy | Frontend web application |
+| [be-quinty](https://github.com/Quinty-Quest-Bounty/be-quinty) | NestJS, Supabase, JWT | Authentication API and user profiles |
+| [indexer-quinty](https://github.com/Quinty-Quest-Bounty/indexer-quinty) | Ponder, PostgreSQL | Blockchain event indexer with GraphQL |
+| [landing-quinty](https://github.com/Quinty-Quest-Bounty/landing-quinty) | Vite, React, GSAP | Marketing landing page |
+| [docs](https://github.com/Quinty-Quest-Bounty/docs) | Mintlify | This documentation site |
+
+## Data Flow
+
+```
+User action in frontend
+  --> Wagmi sends transaction to smart contract on Base Sepolia
+  --> Contract emits events
+  --> Indexer picks up events and stores in PostgreSQL
+  --> Frontend queries indexer's GraphQL API for display
+
+User login in frontend
+  --> Privy authenticates user
+  --> Frontend calls backend /auth/sync-profile
+  --> Backend upserts profile in Supabase
+  --> Backend returns JWT cookie
+  --> Frontend uses cookie for authenticated API calls
+```
+
+## Key Files
+
+### Smart Contracts (sc-quinty)
+
+| Path | Description |
+|------|-------------|
+| `contracts/Quinty.sol` | Bounty contract |
+| `contracts/Quest.sol` | Quest contract |
+| `contracts/QuintyReputation.sol` | Soulbound reputation |
+| `contracts/QuintyNFT.sol` | Badge NFTs |
+| `exported-abis/constants.ts` | Deployed addresses and enums |
+| `exported-abis/Quinty.json` | Bounty ABI |
+| `exported-abis/Quest.json` | Quest ABI |
+| `scripts/deploy.ts` | Deployment script |
+| `scripts/export-abis.ts` | ABI export script |
+
+### Frontend (fe-quinty)
+
+| Path | Description |
+|------|-------------|
+| `src/app/` | Next.js App Router pages |
+| `src/app/bounties/` | Bounty listing and creation |
+| `src/app/quests/` | Quest listing and creation |
+| `src/app/dashboard/` | User dashboard |
+| `src/app/profile/` | User profile and settings |
+| `src/app/reputation/` | Soulbound badges |
+| `src/app/history/` | Activity history |
+
+### Backend (be-quinty)
+
+| Path | Description |
+|------|-------------|
+| `src/auth/auth.controller.ts` | Auth endpoints |
+| `src/auth/auth.service.ts` | Auth logic (JWT, Supabase, Twitter) |
+| `src/users/users.controller.ts` | User lookup endpoints |
+| `src/users/users.service.ts` | User profile CRUD |
+
+### Indexer (indexer-quinty)
+
+| Path | Description |
+|------|-------------|
+| `ponder.config.ts` | Contract addresses and network config |
+| `ponder.schema.ts` | Database schema (Bounty, Submission, Quest, QuestEntry, User) |
+| `src/` | Event handler functions |
+| `abis/` | Contract ABIs used for indexing |

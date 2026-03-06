@@ -1,0 +1,163 @@
+---
+title: "Indexer GraphQL"
+description: "Ponder-powered indexer for querying on-chain data"
+---
+
+## Endpoint
+
+```
+http://localhost:42069    # Local development
+```
+
+The indexer provides a GraphQL API powered by Ponder. It indexes events from the Quinty, Quest, and QuintyReputation contracts on Base Sepolia.
+
+## How It Works
+
+1. Ponder watches for new blocks on Base Sepolia
+2. When a contract emits an event (e.g., `BountyCreated`), the indexer handler processes it
+3. Data is stored in PostgreSQL tables
+4. The GraphQL API exposes this data for querying
+
+This is event-driven -- the indexer only knows about data that was emitted as blockchain events.
+
+## Schema
+
+### Bounty
+
+| Field | Type | Description |
+|-------|------|-------------|
+| id | String | Bounty ID |
+| creator | String | Creator wallet address |
+| title | String | Bounty title |
+| description | String | Bounty description |
+| amount | BigInt | Total escrow amount |
+| openDeadline | BigInt | Unix timestamp |
+| judgingDeadline | BigInt | Unix timestamp |
+| slashPercent | BigInt | Slash percentage in basis points |
+| status | String | OPEN, JUDGING, RESOLVED, SLASHED |
+| totalDeposits | BigInt | Sum of all submission deposits |
+| timestamp | BigInt | Creation timestamp |
+
+### Submission
+
+| Field | Type | Description |
+|-------|------|-------------|
+| id | String | Submission ID |
+| bountyId | String | Reference to Bounty |
+| submitter | String | Submitter wallet address |
+| ipfsCid | String | IPFS content identifier |
+| deposit | BigInt | Deposit amount |
+| timestamp | BigInt | Submission timestamp |
+| isWinner | Boolean | Whether this submission won |
+
+### Quest
+
+| Field | Type | Description |
+|-------|------|-------------|
+| id | String | Quest ID |
+| creator | String | Creator wallet address |
+| title | String | Quest title |
+| description | String | Quest description |
+| totalAmount | BigInt | Total escrow |
+| perQualifier | BigInt | Reward per approved entry |
+| maxQualifiers | BigInt | Max approved entries |
+| qualifiersCount | Int | Current approved count |
+| deadline | BigInt | Unix timestamp |
+| resolved | Boolean | Whether quest is finalized |
+| cancelled | Boolean | Whether quest is cancelled |
+| requirements | String | Task requirements |
+
+### QuestEntry
+
+| Field | Type | Description |
+|-------|------|-------------|
+| id | String | Entry ID |
+| questId | String | Reference to Quest |
+| solver | String | Solver wallet address |
+| ipfsProofCid | String | IPFS proof |
+| status | Int | 0 = Pending, 1 = Approved, 2 = Rejected |
+| timestamp | BigInt | Submission timestamp |
+
+### User
+
+| Field | Type | Description |
+|-------|------|-------------|
+| id | String | Wallet address |
+| bountiesCreated | Int | Number of bounties created |
+| bountiesWon | Int | Number of bounties won |
+| totalVolumeCreated | BigInt | Total ETH/token value of created bounties |
+| totalVolumeWon | BigInt | Total ETH/token value won |
+| questsCreated | Int | Number of quests created |
+| questsCompleted | Int | Number of quests completed |
+
+## Example Queries
+
+### List Open Bounties
+
+```graphql
+{
+  bountys(where: { status: "OPEN" }, orderBy: "timestamp", orderDirection: "desc") {
+    items {
+      id
+      creator
+      title
+      amount
+      openDeadline
+      status
+    }
+  }
+}
+```
+
+### Get User Stats
+
+```graphql
+{
+  user(id: "0x...") {
+    bountiesCreated
+    bountiesWon
+    totalVolumeCreated
+    totalVolumeWon
+    questsCreated
+    questsCompleted
+  }
+}
+```
+
+### Get Bounty with Submissions
+
+```graphql
+{
+  bounty(id: "1") {
+    title
+    amount
+    status
+    creator
+  }
+  submissions(where: { bountyId: "1" }) {
+    items {
+      submitter
+      ipfsCid
+      isWinner
+      deposit
+    }
+  }
+}
+```
+
+### Filter Quests by Creator
+
+```graphql
+{
+  quests(where: { creator: "0x..." }) {
+    items {
+      id
+      title
+      perQualifier
+      maxQualifiers
+      qualifiersCount
+      resolved
+    }
+  }
+}
+```

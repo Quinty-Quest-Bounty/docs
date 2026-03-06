@@ -1,0 +1,52 @@
+---
+title: "Deployed Addresses"
+description: "Contract addresses and network information"
+---
+
+## Base Sepolia (Testnet)
+
+| Property | Value |
+|----------|-------|
+| Chain ID | `84532` |
+| RPC URL | `https://sepolia.base.org` |
+| Block Explorer | [sepolia-explorer.base.org](https://sepolia-explorer.base.org) |
+| Faucet | [Coinbase Base Faucet](https://www.coinbase.com/faucets/base-ethereum-goerli-faucet) |
+
+## Contract Addresses
+
+| Contract | Address |
+|----------|---------|
+| Quinty | [`0x034cf0b72BcB1b529a2B0458275E0307CD6b5459`](https://sepolia-explorer.base.org/address/0x034cf0b72BcB1b529a2B0458275E0307CD6b5459) |
+| Quest | [`0x86cc170e725784812A31F548c434e425bc0181B1`](https://sepolia-explorer.base.org/address/0x86cc170e725784812A31F548c434e425bc0181B1) |
+| QuintyReputation | [`0x3Fc6d21B3AC4E419a2bEe6BeB40E00FfF2bF1014`](https://sepolia-explorer.base.org/address/0x3Fc6d21B3AC4E419a2bEe6BeB40E00FfF2bF1014) |
+| QuintyNFT | [`0x6fcd78D8BB923E20B3C657C65f64A20a4a6b9884`](https://sepolia-explorer.base.org/address/0x6fcd78D8BB923E20B3C657C65f64A20a4a6b9884) |
+
+## Token Addresses
+
+| Token | Address | Decimals |
+|-------|---------|----------|
+| USDC | [`0x036CbD53842c5426634e7929541eC2318f3dCF7e`](https://sepolia-explorer.base.org/address/0x036CbD53842c5426634e7929541eC2318f3dCF7e) | 6 |
+| ETH (native) | `0x0000000000000000000000000000000000000000` | 18 |
+
+## ABIs
+
+Contract ABIs are exported from the `sc-quinty` repository:
+
+```
+sc-quinty/exported-abis/
+  Quinty.json              # Bounty contract ABI
+  Quest.json               # Quest contract ABI
+  all-abis.json            # All ABIs in one file
+  constants.ts             # Addresses, enums, USDC address
+```
+
+The `constants.ts` file exports TypeScript types and addresses:
+
+```typescript
+import { BASE_SEPOLIA_ADDRESSES } from "./exported-abis/constants";
+
+// BASE_SEPOLIA_ADDRESSES.Quinty
+// BASE_SEPOLIA_ADDRESSES.Quest
+// BASE_SEPOLIA_ADDRESSES.QuintyReputation
+// BASE_SEPOLIA_ADDRESSES.QuintyNFT
+```
