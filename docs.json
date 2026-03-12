@@ -53,6 +53,22 @@
         ]
       },
       {
+        "tab": "Agents",
+        "groups": [
+          {
+            "group": "Agent Docs",
+            "pages": [
+              "agents/overview",
+              "agents/quickstart",
+              "agents/authentication",
+              "agents/api-reference",
+              "agents/erc-8004",
+              "agents/drafting-bounties"
+            ]
+          }
+        ]
+      },
+      {
         "tab": "Guides",
         "groups": [
           {
